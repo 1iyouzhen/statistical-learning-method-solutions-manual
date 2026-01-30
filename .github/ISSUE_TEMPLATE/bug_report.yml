@@ -1,0 +1,63 @@
+name: Bug Report
+description: 报告项目中的习题解答问题
+title: "[Bug] 具体章节-具体题目号-具体问题-期望结果"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您提交问题！请填写以下信息帮助我们更好地定位和解决问题。
+
+  - type: input
+    id: chapter
+    attributes:
+      label: 出现问题的具体章节
+      description: 请填写出现问题的具体章节号
+      placeholder: 例如：第1章、第2章、第3章等
+    validations:
+      required: true
+
+  - type: input
+    id: problem
+    attributes:
+      label: 出现问题的具体题目号
+      description: 请填写出现问题的具体题目号
+      placeholder: 例如：习题1.1、习题2.3、习题3.5等
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 出现问题的具体描述
+      description: 请详细描述遇到的问题
+      placeholder: 请描述您遇到的具体问题，包括错误信息、异常行为等
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-result
+    attributes:
+      label: 期望结果
+      description: 请描述您期望的正确行为
+      placeholder: 描述您期望应该发生什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 其他信息
+      description: 请提供任何其他有助于解决问题的信息
+      placeholder: 包括日志、截图、相关配置等
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 确认事项 / Verification
+      description: 请确认以下事项 / Please confirm the following
+      options:
+        - label: 此问题未在过往Issue中被报告过 / This issue hasn't been reported before
+          required: true
