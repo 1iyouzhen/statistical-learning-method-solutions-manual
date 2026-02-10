@@ -1,0 +1,22 @@
+[project]
+name = "statistical-learning-method-solutions-manual"
+version = "0.1.0"
+description = "李航《机器学习方法》习题解答"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "graphviz>=0.21",
+    "jupyter-nbextensions-configurator>=0.6.4",
+    "matplotlib>=3.10.8",
+    "notebook==6.5.7",
+    "numpy>=2.4.2",
+    "pandas>=3.0.0",
+    "pip>=26.0.1",
+    "scikit-learn>=1.8.0",
+    "setuptools>=82.0.0",
+    "torchtext>=0.18.0",
+    "tqdm>=4.67.3",
+]
+
+[[tool.uv.index]]
+url = "https://mirrors.aliyun.com/pypi/simple"
