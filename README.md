@@ -42,33 +42,38 @@
 > 版次：2022年3月第1版  
 
 ## Notebook运行环境配置
-1. Python版本  
-   请使用python3.10.X，如使用其他版本，requirements.txt中所列的依赖包可能不兼容。
-   
-2. 安装相关的依赖包
-    ```shell
-    pip install -r requirements.txt
-    ```
-   
-3. 安装graphviz（用于展示决策树）  
+1. 基础环境：Python3.12+、node 18.20.4+
+
+2. 安装UV
+```shell
+pip install uv
+set UV_INDEX=https://mirrors.aliyun.com/pypi/simple
+```
+
+3. 安装Python依赖包
+```shell
+uv sync --python 3.12 --all-extras
+```
+
+4. 安装graphviz（用于展示决策树）  
     可参考博客：https://blog.csdn.net/HNUCSEE_LJK/article/details/86772806
 
-4. 安装PyTorch
+5. 安装PyTorch
 访问[PyTorch官网](https://pytorch.org/get-started/locally/)，选择合适的版本安装PyTorch，有条件的小伙伴可以下载GPU版本
     ```shell
-    pip3 install torch==1.12.1+cu116 torchvision==0.13.1+cu116 torchaudio==0.12.1+cu116 -f https://download.pytorch.org/whl/torch_stable.html
+    uv pip install torch==2.7.1 torchvision==0.22.1 torchaudio torchviz --index https://download.pytorch.org/whl/cu118
     ```
 
-5. docsify框架运行
+6. vitepress框架运行
     ```shell
-    docsify serve ./docs
+    npm run docs:dev
     ```
 
 ## 协作规范
 1. 由于习题解答中需要有程序和执行结果，采用jupyter notebook的格式进行编写（文件路径：notebook/notes），然后将其导出成markdown格式，再覆盖到docs对应的章节下。
 2. 可按照Notebook运行环境配置，配置相关的运行环境。
 3. 习题解答编写中，需要尽量使用初学者（有高数基础）能理解的数学概念，如果涉及公式定理的推导和证明，可附上参考链接。
-4. 当前进度
+4. 当前进度：
 
 | 章节名 |  进度  | 负责人 | 审核人 |
 | :---: | :----: | :----: | :----: |

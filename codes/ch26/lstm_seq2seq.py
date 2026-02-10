@@ -10,7 +10,6 @@
 
 import torch
 from torch import nn
-import numpy as np
 
 
 class S2SEncoder(nn.Module):

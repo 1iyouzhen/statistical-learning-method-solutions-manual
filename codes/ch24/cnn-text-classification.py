@@ -7,13 +7,145 @@
 @project: statistical-learning-method-solutions-manual
 @desc: 习题24.7 基于CNN的自然语言句子分类模型
 """
+import csv
+import os
+import re
 import time
+from collections import Counter
+
+import requests
 import torch
+import urllib3
 from torch import nn, optim
 from torch.utils.data import random_split, DataLoader
-from torchtext.data import get_tokenizer, to_map_style_dataset
-from torchtext.datasets import AG_NEWS
-from torchtext.vocab import build_vocab_from_iterator
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
+def get_tokenizer(tokenizer_type='basic_english'):
+    if tokenizer_type == 'basic_english':
+        def tokenizer(text):
+            return re.findall(r'\w+', text.lower())
+
+        return tokenizer
+    return lambda x: x.split()
+
+
+def to_map_style_dataset(iter_data):
+    return list(iter_data)
+
+
+def download_file(filename, filepath):
+    base_urls = [
+        "https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/",
+        "https://ghproxy.net/https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/",
+        "https://fastly.jsdelivr.net/gh/mhjabreel/CharCnn_Keras@master/data/ag_news_csv/"
+    ]
+
+    print(f"Attempting to download {filename}...")
+
+    for base_url in base_urls:
+        url = base_url + filename
+        print(f"Trying {url} ...")
+        try:
+            # Try with verification first, then without if it fails with SSLError
+            try:
+                response = requests.get(url, stream=True, timeout=10)
+            except requests.exceptions.SSLError:
+                print(f"SSL Error with {url}, trying without verification...")
+                response = requests.get(url, stream=True, timeout=10, verify=False)
+
+            if response.status_code == 200:
+                with open(filepath, 'wb') as f:
+                    for chunk in response.iter_content(chunk_size=8192):
+                        f.write(chunk)
+                print(f"Downloaded successfully from {url}")
+                return
+            else:
+                print(f"Failed to download from {url}, status code: {response.status_code}")
+        except Exception as e:
+            print(f"Error downloading from {url}: {e}")
+
+    # If all mirrors fail
+    raise RuntimeError(
+        f"Failed to download {filename} from all mirrors.\n"
+        f"Please manually download 'train.csv' and 'test.csv' from "
+        f"https://github.com/mhjabreel/CharCnn_Keras/tree/master/data/ag_news_csv "
+        f"and place them in {os.path.dirname(filepath)}"
+    )
+
+
+def AG_NEWS(root='./data'):
+    base_path = os.path.join(root, 'datasets', 'AG_NEWS')
+    os.makedirs(base_path, exist_ok=True)
+
+    train_path = os.path.join(base_path, 'train.csv')
+    test_path = os.path.join(base_path, 'test.csv')
+
+    if not os.path.exists(train_path):
+        download_file("train.csv", train_path)
+
+    if not os.path.exists(test_path):
+        download_file("test.csv", test_path)
+
+    def load_csv(filepath):
+        data = []
+        with open(filepath, 'r', encoding='utf-8') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                # row: [label, title, description]
+                try:
+                    label = int(row[0])
+                    text = row[1] + " " + row[2]
+                    data.append((label, text))
+                except (ValueError, IndexError):
+                    continue
+        return data
+
+    return load_csv(train_path), load_csv(test_path)
+
+
+class Vocab:
+    def __init__(self, vocab_dict, default_index=None):
+        self.vocab_dict = vocab_dict
+        self.default_index = default_index
+
+    def __getitem__(self, token):
+        return self.vocab_dict.get(token, self.default_index)
+
+    def __len__(self):
+        return len(self.vocab_dict)
+
+    def set_default_index(self, index):
+        self.default_index = index
+
+    def __call__(self, tokens):
+        if isinstance(tokens, list):
+            return [self[t] for t in tokens]
+        return self[tokens]
+
+
+def build_vocab_from_iterator(iterator, specials=None):
+    counter = Counter()
+    for tokens in iterator:
+        counter.update(tokens)
+
+    vocab_dict = {}
+    idx = 0
+    if specials:
+        for s in specials:
+            vocab_dict[s] = idx
+            idx += 1
+
+    sorted_by_freq_tuples = sorted(counter.items(), key=lambda x: (-x[1], x[0]))
+
+    for token, _ in sorted_by_freq_tuples:
+        if token not in vocab_dict:
+            vocab_dict[token] = idx
+            idx += 1
+
+    return Vocab(vocab_dict)
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # 加载AG_NEWS数据集
@@ -60,6 +192,7 @@ def collate_batch(batch):
     text_list = torch.cat(text_list)
     return label_list.to(device), text_list.to(device), offsets.to(device)
 
+
 # 构建数据集的数据加载器
 BATCH_SIZE = 64
 train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE,
@@ -74,6 +207,7 @@ class CNN_Text(nn.Module):
     """
     基于CNN的文本分类模型
     """
+
     def __init__(self, vocab_size, embed_dim, class_num=4, dropout=0.5, kernel_size: list = None):
         super(CNN_Text, self).__init__()
         if kernel_size is None:
@@ -187,6 +321,7 @@ def predict(text, text_pipeline):
         text = torch.tensor(text_pipeline(text))
         output = best_model(text, torch.tensor([0]))
         return output.argmax(1).item() + 1
+
 
 # 预测一个文本的类别
 ex_text_str = """

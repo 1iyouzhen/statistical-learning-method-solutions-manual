@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "graphviz>=0.21",
+    "h5py>=3.15.1",
     "jupyter-nbextensions-configurator>=0.6.4",
     "matplotlib>=3.10.8",
     "notebook==6.5.7",
@@ -14,8 +15,10 @@ dependencies = [
     "pip>=26.0.1",
     "scikit-learn>=1.8.0",
     "setuptools>=82.0.0",
-    "torchtext>=0.18.0",
+    "simple-elmo-pytorch>=0.2",
     "tqdm>=4.67.3",
+    "wget",
+    "wheel>=0.46.3",
 ]
 
 [[tool.uv.index]]
