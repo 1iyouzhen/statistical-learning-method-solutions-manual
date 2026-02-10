@@ -7,9 +7,12 @@
 @project: statistical-learning-method-solutions-manual
 @desc: 习题19.7 使用Metropolis-Hastings算法求后验概率分布的均值和方差
 """
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import beta, binom
+
+matplotlib.use('TkAgg')
 
 
 class MetropolisHastings:
@@ -98,7 +101,7 @@ class ProposalDistribution:
         从建议分布中抽取一个样本
         """
         # B(1,1)
-        return beta.rvs(1, 1, size=1)
+        return beta.rvs(1, 1)
 
     @staticmethod
     def prob(x):

@@ -8,10 +8,12 @@
 @desc: 习题9.3 使用GaussianMixture求解两个分量高斯混合模型的6个参数
 """
 
-from sklearn.mixture import GaussianMixture
-import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.mixture import GaussianMixture
 
+matplotlib.use('TkAgg')
 # 初始化观测数据
 data = np.array([-67, -48, 6, 8, 14, 16, 23, 24, 28, 29, 41, 49, 56, 60, 75]).reshape(-1, 1)
 

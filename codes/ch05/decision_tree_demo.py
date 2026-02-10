@@ -52,11 +52,12 @@ dot_data = tree.export_graphviz(model_tree, out_file=None,
                                 feature_names=features_names,
                                 class_names=class_names,
                                 filled=True, rounded=True,
-                                special_characters=True)
+                                special_characters=True,
+                                fontname="Microsoft YaHei")
 # 使用graphviz包，对决策树进行展示
 graph = graphviz.Source(dot_data)
 # 可使用view方法展示决策树
-# 中文乱码：需要对源码_export.py文件（文件路径：sklearn/tree/_export.py）修改，在文件第451行中将helvetica改成SimSun
+# 中文乱码：已通过fontname参数指定为Microsoft YaHei解决
 graph.view()
 # 打印决策树
 tree_text = tree.export_text(model_tree, feature_names=features_names)

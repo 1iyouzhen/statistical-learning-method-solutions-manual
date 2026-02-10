@@ -7,10 +7,12 @@
 @project: statistical-learning-method-solutions-manual
 @desc: 习题7.2 根据题目中的数据训练模型，并在图中画出分离超平面、间隔边界及支持向量
 """
-from sklearn.svm import SVC
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.svm import SVC
 
+matplotlib.use('TkAgg')
 # 加载数据
 X = [[1, 2], [2, 3], [3, 3], [2, 1], [3, 2]]
 y = [1, 1, 1, -1, -1]

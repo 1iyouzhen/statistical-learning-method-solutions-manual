@@ -7,12 +7,13 @@
 @project: statistical-learning-method-solutions-manual
 @desc: 习题6.2 实现Logistic回归模型学习的梯度下降法
 """
-
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from pylab import mpl
 from scipy.optimize import fminbound
 
+matplotlib.use('TkAgg')
 # 图像显示中文
 mpl.rcParams['font.sans-serif'] = ['Microsoft YaHei']
 
@@ -59,7 +60,7 @@ class MyLogisticRegression:
         self._X = self.preprocessing(data_x)
         self._y = data_y.T
         # （1）取初始化w
-        w = np.array([[0] * self._X.shape[1]], dtype=np.float)
+        w = np.array([[0] * self._X.shape[1]], dtype=float)
         k = 0
         # （2）计算f(w)
         fw = self.likelihood_func(w)

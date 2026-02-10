@@ -8,7 +8,10 @@
 @desc: 习题2.2 构建从训练数据求解感知机模型的例子
 """
 
+import matplotlib
 import numpy as np
+
+matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
 
 

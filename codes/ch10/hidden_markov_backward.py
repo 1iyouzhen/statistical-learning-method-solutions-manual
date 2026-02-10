@@ -68,7 +68,7 @@ class HiddenMarkovBackward:
         for i in range(N):
             print("%.1f * %.1f * %.5f + "
                   % (PI[0][i], B[i][index_of_o], betas[i][0]), end="")
-        print("0 = %f" % P)
+        print("0 = %f" % P.item())
 
     @staticmethod
     def print_betas_t(A, B, N, betas, i, index_of_o, real_i, real_t, t):

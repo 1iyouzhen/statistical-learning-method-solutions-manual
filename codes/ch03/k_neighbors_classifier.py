@@ -8,8 +8,11 @@
 @desc: 习题3.1 k近邻算法关于k值的模型比较
 """
 
+import matplotlib
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
+
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 

@@ -7,8 +7,11 @@
 @project: statistical-learning-method-solutions-manual
 @desc: 习题19.8 使用吉布斯抽样算法估计参数的均值和方差
 """
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+
+matplotlib.use('TkAgg')
 
 
 class GibbsSampling:
