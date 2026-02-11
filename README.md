@@ -45,15 +45,15 @@
 1. 基础环境：Python3.12+、node 18.20.4+
 
 2. 安装UV
-```shell
-pip install uv
-set UV_INDEX=https://mirrors.aliyun.com/pypi/simple
-```
+    ```shell
+    pip install uv
+    set UV_INDEX=https://mirrors.aliyun.com/pypi/simple
+    ```
 
 3. 安装Python依赖包
-```shell
-uv sync --python 3.12 --all-extras
-```
+    ```shell
+    uv sync --python 3.12 --all-extras
+    ```
 
 4. 安装graphviz（用于展示决策树）  
     可参考博客：https://blog.csdn.net/HNUCSEE_LJK/article/details/86772806
@@ -64,7 +64,12 @@ uv sync --python 3.12 --all-extras
     uv pip install torch==2.7.1 torchvision==0.22.1 torchaudio torchviz --index https://download.pytorch.org/whl/cu118
     ```
 
-6. vitepress框架运行
+6. 启动notebook
+    ```shell
+    jupyter notebook
+    ```
+
+7. 运行vitepress框架
     ```shell
     npm run docs:dev
     ```

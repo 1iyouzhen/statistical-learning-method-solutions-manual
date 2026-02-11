@@ -164,11 +164,11 @@ def print_k_neighbor_sets(k, ii, dd):
         text = "x点的%d个近邻点是" % k
 
     for i, index in enumerate(ii):
-        res = X_train[index]
+        res = tuple(X_train[index].tolist())
         if i == 0:
-            text += str(tuple(res))
+            text += "(" + str(res)[1:-1] + ")"
         else:
-            text += ", " + str(tuple(res))
+            text += ", " + "(" + str(res)[1:-1] + ")"
 
     if k == 1:
         text += "，距离是"

@@ -30,7 +30,6 @@ class Perceptron:
         self.plot = plot
         if plot:
             self.__model_plot = self._ModelPlot(self.X, self.Y)
-            self.__model_plot.open_in()
 
     def fit(self):
         # (1)初始化weight, b
@@ -61,8 +60,7 @@ class Perceptron:
                     # 本次循环有误分类点（即分类错误），置为True
                     mistake_flag = True
                     break
-        if self.plot:
-            self.__model_plot.close()
+        plt.show()
         # (4)直至训练集中没有误分类点
         return weight, b
 
@@ -70,17 +68,6 @@ class Perceptron:
         def __init__(self, X, Y):
             self.X = X
             self.Y = Y
-
-        @staticmethod
-        def open_in():
-            # 打开交互模式，用于展示动态交互图
-            plt.ion()
-
-        @staticmethod
-        def close():
-            # 关闭交互模式，并显示最终的图形
-            plt.ioff()
-            plt.show()
 
         def plot(self, weight, b, epoch):
             plt.cla()
