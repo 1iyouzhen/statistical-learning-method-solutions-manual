@@ -8,6 +8,7 @@
 @desc: 习题27.1 基于双向LSTM的ELMo预训练语言模型，假设下游任务是文本分类
 """
 import csv
+
 import os
 import time
 
@@ -28,51 +29,50 @@ def to_map_style_dataset(iter_data):
     return list(iter_data)
 
 
-def download_file(filename, filepath):
-    base_urls = [
-        "https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/",
-        "https://ghproxy.net/https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/",
-        "https://fastly.jsdelivr.net/gh/mhjabreel/CharCnn_Keras@master/data/ag_news_csv/"
-    ]
-
-    print(f"Attempting to download {filename}...")
-
-    for base_url in base_urls:
-        url = base_url + filename
-        print(f"Trying {url} ...")
-        try:
-            try:
-                response = requests.get(url, stream=True, timeout=10)
-            except requests.exceptions.SSLError:
-                print(f"SSL Error with {url}, trying without verification...")
-                response = requests.get(url, stream=True, timeout=10, verify=False)
-
-            if response.status_code == 200:
-                with open(filepath, 'wb') as f:
-                    for chunk in response.iter_content(chunk_size=8192):
-                        f.write(chunk)
-                print(f"Downloaded successfully from {url}")
-                return
-            else:
-                print(f"Failed to download from {url}, status code: {response.status_code}")
-        except Exception as e:
-            print(f"Error downloading from {url}: {e}")
-
-    # If all mirrors fail
-    raise RuntimeError(
-        f"Failed to download {filename} from all mirrors.\n"
-        f"Please manually download 'train.csv' and 'test.csv' from "
-        f"https://github.com/mhjabreel/CharCnn_Keras/tree/master/data/ag_news_csv "
-        f"and place them in {os.path.dirname(filepath)}"
-    )
-
-
 def AG_NEWS(root='./data'):
     base_path = os.path.join(root, 'datasets', 'AG_NEWS')
     os.makedirs(base_path, exist_ok=True)
 
     train_path = os.path.join(base_path, 'train.csv')
     test_path = os.path.join(base_path, 'test.csv')
+
+    def download_file(filename, filepath):
+        base_urls = [
+            "https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/",
+            "https://ghproxy.net/https://raw.githubusercontent.com/mhjabreel/CharCnn_Keras/master/data/ag_news_csv/",
+            "https://fastly.jsdelivr.net/gh/mhjabreel/CharCnn_Keras@master/data/ag_news_csv/"
+        ]
+
+        print(f"Attempting to download {filename}...")
+
+        for base_url in base_urls:
+            url = base_url + filename
+            print(f"Trying {url} ...")
+            try:
+                try:
+                    response = requests.get(url, stream=True, timeout=10)
+                except requests.exceptions.SSLError:
+                    print(f"SSL Error with {url}, trying without verification...")
+                    response = requests.get(url, stream=True, timeout=10, verify=False)
+
+                if response.status_code == 200:
+                    with open(filepath, 'wb') as f:
+                        for chunk in response.iter_content(chunk_size=8192):
+                            f.write(chunk)
+                    print(f"Downloaded successfully from {url}")
+                    return
+                else:
+                    print(f"Failed to download from {url}, status code: {response.status_code}")
+            except Exception as e:
+                print(f"Error downloading from {url}: {e}")
+
+        # If all mirrors fail
+        raise RuntimeError(
+            f"Failed to download {filename} from all mirrors.\n"
+            f"Please manually download 'train.csv' and 'test.csv' from "
+            f"https://github.com/mhjabreel/CharCnn_Keras/tree/master/data/ag_news_csv "
+            f"and place them in {os.path.dirname(filepath)}"
+        )
 
     if not os.path.exists(train_path):
         download_file("train.csv", train_path)
@@ -101,10 +101,10 @@ def get_elmo_model():
     elmo_options_file = './data/elmo_2x1024_128_2048cnn_1xhighway_options.json'
     elmo_weight_file = './data/elmo_2x1024_128_2048cnn_1xhighway_weights.hdf5'
     url = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x1024_128_2048cnn_1xhighway/elmo_2x1024_128_2048cnn_1xhighway_options.json"
-    if (not os.path.exists(elmo_options_file)):
+    if not os.path.exists(elmo_options_file):
         wget.download(url, elmo_options_file)
     url = "https://s3-us-west-2.amazonaws.com/allennlp/models/elmo/2x1024_128_2048cnn_1xhighway/elmo_2x1024_128_2048cnn_1xhighway_weights.hdf5"
-    if (not os.path.exists(elmo_weight_file)):
+    if not os.path.exists(elmo_weight_file):
         wget.download(url, elmo_weight_file)
 
     print("Initializing ELMo model...")
