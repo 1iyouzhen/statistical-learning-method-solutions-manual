@@ -94,4 +94,5 @@ if __name__ == '__main__':
     divi_cluster.fit(dataset)
     print("分类数:", num_class)
     for i in range(num_class):
-        print(f"class_{i}:", divi_cluster.cluster_data[i])
+        print(f"class_{i}:", [item.tolist() for item in divi_cluster.cluster_data[i]])
+
