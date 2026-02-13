@@ -209,4 +209,6 @@ if __name__ == '__main__':
     print("模型权重：{}".format(mae.w))
 
     result = mae.predict(['overcast', 'mild', 'high', 'FALSE'])
+    # 将result的np类型都转成python类型
+    result = {str(k): float(v) for k, v in result.items()}
     print("预测结果：", result)
